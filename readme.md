@@ -2,7 +2,7 @@
 [![Latest Stable Version](http://poser.pugx.org/srwiez/queue-size-health-check/v)](https://packagist.org/packages/srwiez/queue-size-health-check) [![Total Downloads](http://poser.pugx.org/srwiez/queue-size-health-check/downloads)](https://packagist.org/packages/srwiez/queue-size-health-check) [![Latest Unstable Version](http://poser.pugx.org/srwiez/queue-size-health-check/v/unstable)](https://packagist.org/packages/srwiez/queue-size-health-check) [![License](http://poser.pugx.org/srwiez/queue-size-health-check/license)](https://packagist.org/packages/srwiez/queue-size-health-check) [![PHP Version Require](http://poser.pugx.org/srwiez/queue-size-health-check/require/php)](https://packagist.org/packages/srwiez/queue-size-health-check)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/SRWieZ/queue-size-health-check/test.yml?label=Tests)
 
-This package is for the people
+This package is for the people that prefer to use Spatie Health check package instead of `php artisan queue:monitor`
 
 ## Installation
 
