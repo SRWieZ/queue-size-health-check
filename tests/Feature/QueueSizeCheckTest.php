@@ -1,17 +1,45 @@
 <?php
 
-use Illuminate\Support\Facades\Queue;
-use Tests\FakeJob;
+use Illuminate\Support\Facades\Notification;
+use QueueSizeCheck\QueueSizeCheck;
+use Spatie\Health\Commands\RunHealthChecksCommand;
+use Spatie\Health\Enums\Status;
+use Spatie\Health\Facades\Health;
+use Tests\FakeQueueSizeCheck;
 
-test('multiple jobs are added to the queue', function () {
-    Queue::fake();
+use function Pest\Laravel\artisan;
 
-    for ($i = 0; $i < 10; $i++) {
-        FakeJob::dispatch('data'.$i);
-    }
+it('will determine that queue size is ok if it does not cross the maximum', function () {
+    $result = QueueSizeCheck::new()
+        ->queue('default', '9')
+        ->run();
 
-    Queue::assertPushed(FakeJob::class, 10);
-
-    expect(Queue::size())
-        ->toBe(10);
+    expect($result->status)
+        ->toBe(Status::ok());
 });
+
+it('will determine that queue size is not ok if it does cross the maximum', function () {
+    $result = QueueSizeCheck::new()
+        ->queue('default', '11')
+        ->run();
+
+    expect($result->status)->toBe(Status::failed());
+});
+
+it('should not send a notification on a successful check', function () {
+    Notification::fake();
+
+    registerPassingQueueSizeCheck();
+
+    artisan(RunHealthChecksCommand::class)->assertSuccessful();
+
+    Notification::assertNothingSent();
+});
+
+function registerPassingQueueSizeCheck()
+{
+    Health::checks([
+        FakeQueueSizeCheck::new()
+            ->fakeQueueSize(10),
+    ]);
+}

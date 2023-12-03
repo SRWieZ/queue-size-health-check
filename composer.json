@@ -22,10 +22,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+            "Tests\\": "tests/"
         }
     },
     "minimum-stability": "stable",
@@ -34,8 +31,7 @@
         "pestphp/pest": "^2.0",
         "symfony/var-dumper": "^6.3",
         "laravel/pint": "^1.13",
-        "pestphp/pest-plugin-laravel": "^2.2",
-        "orchestra/testbench": "^8.15"
+        "pestphp/pest-plugin-laravel": "^2.2"
     },
     "config": {
         "allow-plugins": {
@@ -43,18 +39,6 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": [
-            "@clear",
-            "@prepare"
-        ],
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
-        "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "build": "@php vendor/bin/testbench workbench:build --ansi",
-        "serve": [
-            "Composer\\Config::disableProcessTimeout",
-            "@build",
-            "@php vendor/bin/testbench serve"
-        ],
         "lint": [
             "@php vendor/bin/pint"
         ],
