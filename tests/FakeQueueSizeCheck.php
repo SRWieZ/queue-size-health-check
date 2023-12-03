@@ -15,7 +15,7 @@ class FakeQueueSizeCheck extends QueueSizeCheck
         return $this;
     }
 
-    public function getQueueSize(): int
+    protected function getQueueSize($connection, $name): int
     {
         return $this->fake_size;
     }
