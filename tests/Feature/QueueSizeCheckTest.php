@@ -11,4 +11,7 @@ test('multiple jobs are added to the queue', function () {
     }
 
     Queue::assertPushed(FakeJob::class, 10);
+
+    expect(Queue::size())
+        ->toBe(10);
 });
