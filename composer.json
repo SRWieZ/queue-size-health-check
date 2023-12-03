@@ -31,7 +31,8 @@
         "pestphp/pest": "^2.0",
         "symfony/var-dumper": "^6.3",
         "laravel/pint": "^1.13",
-        "pestphp/pest-plugin-laravel": "^2.2"
+        "pestphp/pest-plugin-laravel": "^2.2",
+        "orchestra/testbench": "^8.0"
     },
     "config": {
         "allow-plugins": {
