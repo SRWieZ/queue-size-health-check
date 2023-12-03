@@ -1,10 +1,10 @@
-name: Tests
+name: run-tests
 
 on:
-  pull_request: ~
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   test:
@@ -13,12 +13,12 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest]
-        php: [8.2]
+        php: [8.2, 8.3]
         laravel: [10.*]
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 8.*
-            testbench: ^6.23
+          - laravel: 10.*
+            testbench: ^8.0
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -26,18 +26,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.composer/cache/files
-          key: dependencies-php-${{ matrix.php }}-composer-${{ matrix.os }}
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
           coverage: xdebug
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Setup problem matchers
+        run: |
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install dependencies
         run: |

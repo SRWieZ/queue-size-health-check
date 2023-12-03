@@ -35,7 +35,7 @@ class QueueSizeCheck extends Check
         }
 
         $queue_to_be_checked = $queue_to_be_checked->map(function ($queue) {
-            $queue['size'] = Queue::connection($queue['connection'])->size($queue['name']);
+            $queue['size'] = $this->getQueueSize($queue['connection'], $queue['name']);
 
             return $queue;
         });
@@ -60,5 +60,10 @@ class QueueSizeCheck extends Check
         })->join(', ', ' and ');
 
         return $result->failed($message);
+    }
+
+    protected function getQueueSize($connection, $name)
+    {
+        return Queue::connection($connection)->size($name);
     }
 }
