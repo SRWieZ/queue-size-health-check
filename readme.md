@@ -25,8 +25,6 @@ QueueSizeCheck::new()
 ## Contribute / Roadmap
 Hey, pull-request are welcome!
 Here is some of the things that can be improved
-- Tests
-- Github workflow to test again laravel versions
 
 ## Credits
 
