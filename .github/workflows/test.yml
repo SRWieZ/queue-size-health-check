@@ -19,6 +19,8 @@ jobs:
         include:
           - laravel: 10.*
             testbench: ^8.0
+          - laravel: 11.*
+            testbench: ^9.0
 
     name: Test with php ${{ matrix.php }} on ${{ matrix.os }}
 
