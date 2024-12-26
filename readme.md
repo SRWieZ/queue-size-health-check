@@ -19,7 +19,7 @@ composer require srwiez/queue-size-health-check
 ## Usage
 
 ```php
-use QueueSizeHealthCheck\QueueSizeCheck;
+use QueueSizeCheck\QueueSizeCheck;
 
 QueueSizeCheck::new()
     ->queue('static_cache', 3)
