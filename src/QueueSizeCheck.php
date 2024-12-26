@@ -18,9 +18,9 @@ class QueueSizeCheck extends Check
             'max_size' => $max_size,
         ];
 
-        if (!$this->name) {
+        if (! $this->name) {
             $names = array_map(fn ($queue) => $queue['name'], $this->queues);
-            $this->name = 'QueueSizeCheck_' . implode('_', $names);
+            $this->name = 'QueueSizeCheck_'.implode('_', $names);
         }
 
         return $this;
