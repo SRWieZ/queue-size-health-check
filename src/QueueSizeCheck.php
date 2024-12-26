@@ -3,6 +3,7 @@
 namespace QueueSizeCheck;
 
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Str;
 use Spatie\Health\Checks\Check;
 use Spatie\Health\Checks\Result;
 
@@ -18,12 +19,20 @@ class QueueSizeCheck extends Check
             'max_size' => $max_size,
         ];
 
-        if (! $this->name) {
-            $names = array_map(fn ($queue) => $queue['name'], $this->queues);
-            $this->name = 'QueueSizeCheck_'.implode('_', $names);
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        if ($this->name) {
+            return $this->name;
         }
 
-        return $this;
+        $baseName = class_basename(static::class);
+
+        return Str::of($baseName)
+            ->beforeLast('Check')
+            ->append(' '.implode('_', array_map(fn ($queue) => $queue['name'], $this->queues)));
     }
 
     public function run(): Result
