@@ -10,7 +10,7 @@ This package is for the people that prefer to use Spatie Health check package in
 
 ## Installation
 
-Requirement : Before installing this package, please install and configure [Laravel Health](https://github.com/spatie/laravel-health).
+Requirement : Before installing this package, please install and configure [Spatie Laravel Health](https://github.com/spatie/laravel-health).
 
 ```bash
 composer require srwiez/queue-size-health-check
