@@ -74,7 +74,7 @@ jobs:
             printf '%s\n%s\n' "$2" "$1" | sort -V | head -n1 | grep -qx "$2"
           }
           
-          THRESH=">=3.0"
+          THRESH=">=4.0"
           CMP_VERSION=${THRESH#>=}  # strip leading '>=', resulting in '3.0'
           
           if [ -n "$PEST_VERSION" ] && [ "$PEST_VERSION" != "null" ]; then
