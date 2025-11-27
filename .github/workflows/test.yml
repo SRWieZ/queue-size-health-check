@@ -12,19 +12,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        php: ['8.2', '8.3', '8.4']
-        laravel: [10.*, 11.*, 12.*]
-        stability: [prefer-lowest, prefer-stable]
+        os: [ ubuntu-latest ]
+        php: [ '8.2', '8.3', '8.4' , '8.5' ]
+        laravel: [ 10.*, 11.*, 12.* ]
+        stability: [ prefer-lowest, prefer-stable ]
         include:
           - laravel: 10.*
             testbench: ^8.0
           - laravel: 11.*
-            testbench: ^9.0
+            testbench: ^9.2
           - laravel: 12.*
-            testbench: ^10.0
+            testbench: ^10.8
+        exclude:
+          - php: '8.5'
+            laravel: 10.*
+          - php: '8.5'
+            laravel: 11.*
 
-    name: Test with PHP ${{ matrix.php }} - L ${{ matrix.laravel }} - ${{ matrix.stability }}
+    name: Test PHP ${{ matrix.php }} - L ${{ matrix.laravel }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout
@@ -58,5 +63,32 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
+      - name: Determine Pest flags
+        id: pest-info
+        run: |
+          PEST_VERSION=$(composer show -D --format=json | jq -r '.installed[] | select(.name=="pestphp/pest") | .version' 2>/dev/null || true)
+          PEST_VERSION=${PEST_VERSION#v}
+          FLAGS=""
+          
+          version_ge() {
+            printf '%s\n%s\n' "$2" "$1" | sort -V | head -n1 | grep -qx "$2"
+          }
+          
+          THRESH=">=4.0"
+          CMP_VERSION=${THRESH#>=}  # strip leading '>=', resulting in '3.0'
+          
+          if [ -n "$PEST_VERSION" ] && [ "$PEST_VERSION" != "null" ]; then
+            if version_ge "$PEST_VERSION" "$CMP_VERSION"; then
+              FLAGS="--fail-on-deprecation"
+            elif version_ge "$PEST_VERSION" "1.0.0"; then
+              FLAGS="--display-deprecations"
+            else
+              FLAGS=""
+            fi
+          fi
+          
+          echo "flags=$FLAGS" >> $GITHUB_OUTPUT
+
+
       - name: Run tests
-        run: ./vendor/bin/pest
+        run: ./vendor/bin/pest --ci --parallel ${{ steps.pest-info.outputs.flags }}
