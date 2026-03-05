@@ -9,13 +9,14 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
-        php: [ '8.2', '8.3', '8.4' , '8.5' ]
-        laravel: [ 10.*, 11.*, 12.* ]
-        stability: [ prefer-lowest, prefer-stable ]
+        os: [ubuntu-latest]
+        php: ['8.2', '8.3', '8.4', '8.5']
+        laravel: ['10.*', '11.*', '12.*', '13.*']
+        stability: [prefer-lowest, prefer-stable]
         include:
           - laravel: 10.*
             testbench: ^8.0
@@ -23,11 +24,15 @@ jobs:
             testbench: ^9.2
           - laravel: 12.*
             testbench: ^10.8
+          - laravel: 13.*
+            testbench: ^11.0
         exclude:
           - php: '8.5'
             laravel: 10.*
           - php: '8.5'
             laravel: 11.*
+          - laravel: 13.*
+            php: '8.2'
 
     name: Test PHP ${{ matrix.php }} - L ${{ matrix.laravel }} - ${{ matrix.stability }}
 
@@ -40,7 +45,6 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
-      #          coverage: xdebug
 
       - name: Get composer cache directory
         id: composer-cache
@@ -69,14 +73,14 @@ jobs:
           PEST_VERSION=$(composer show -D --format=json | jq -r '.installed[] | select(.name=="pestphp/pest") | .version' 2>/dev/null || true)
           PEST_VERSION=${PEST_VERSION#v}
           FLAGS=""
-          
+
           version_ge() {
             printf '%s\n%s\n' "$2" "$1" | sort -V | head -n1 | grep -qx "$2"
           }
-          
+
           THRESH=">=4.0"
           CMP_VERSION=${THRESH#>=}  # strip leading '>=', resulting in '3.0'
-          
+
           if [ -n "$PEST_VERSION" ] && [ "$PEST_VERSION" != "null" ]; then
             if version_ge "$PEST_VERSION" "$CMP_VERSION"; then
               FLAGS="--fail-on-deprecation"
@@ -86,9 +90,8 @@ jobs:
               FLAGS=""
             fi
           fi
-          
-          echo "flags=$FLAGS" >> $GITHUB_OUTPUT
 
+          echo "flags=$FLAGS" >> $GITHUB_OUTPUT
 
       - name: Run tests
         run: ./vendor/bin/pest --ci --parallel ${{ steps.pest-info.outputs.flags }}
