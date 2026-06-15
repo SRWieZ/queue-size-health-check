@@ -5,7 +5,7 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/SRWieZ/queue-size-health-check?style=flat)
 ![Packagist License (custom server)](https://img.shields.io/packagist/l/SRWieZ/queue-size-health-check)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/SRWieZ/queue-size-health-check/test.yml)
-[![Laravel Version Compatibility](https://badge.laravel.cloud/badge/srwiez/queue-size-health-check?style=flat)](https://packagist.org/packages/srwiez/queue-size-health-check)
+[![Laravel Version Compatibility](https://badge.laravel.cloud/badge/srwiez/queue-size-health-check)](https://packagist.org/packages/srwiez/queue-size-health-check)
 
 This package is for the people that prefer to use Spatie Health check package instead of `php artisan queue:monitor`
 
