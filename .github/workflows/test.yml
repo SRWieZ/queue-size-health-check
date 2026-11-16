@@ -49,7 +49,7 @@ jobs:
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
         with:
           php-version: ${{ matrix.php }}
-          tools: composer:v2
+          tools: composer:2.11.2
 
       - name: Get composer cache directory
         id: composer-cache
@@ -68,6 +68,9 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install dependencies
+        # Test compatibility even when older dependencies have advisories.
+        env:
+          COMPOSER_POLICY_ADVISORIES_BLOCK: '0'
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
